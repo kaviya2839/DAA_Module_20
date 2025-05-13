@@ -1,56 +1,60 @@
-# EX 2C BACKTRACKING- SUBSET SUM PROBLEM
+# EX 2D BACKTRACKING - GRAPH COLORING PROBLEM
 ## DATE:
 ## AIM:
-To demonstrate that the sum of the subset of a given set is equal to the given sum.
+To solve the Graph Coloring Problem using backtracking, assigning colors to the vertices of a graph such that no two adjacent vertices share the same color while minimizing the number of colors used.
+
 
 
 ## Algorithm
-1. Take an integer input `n` representing the number of elements in the list.  
-2. Read `n` integers from the user and store them in the list `arr`.  
-3. Take an integer input `x` which is the target sum.  
-4. Define a function `subsetSum` that takes `n`, `arr`, and `x` as parameters.  
-5. In the function, iterate `i` from 0 to `n` to generate all possible subset sizes.  
-6. For each size `i`, generate all combinations of `arr` of length `i` using `combinations(arr, i)`.  
-7. For each subset generated, check if the sum of its elements is equal to `x`.  
-8. If the sum matches `x`, print the subset as a list.  
-9. Call the `subsetSum` function with the input values to find and display all matching subsets.  
+1. Define a class `Graph` with an initializer that sets the number of vertices `V` and initializes a `V x V` adjacency matrix `graph` with all zeros.  
+2. Define a function `isSafe` that checks if a given color `c` can be assigned to vertex `v` by ensuring that no adjacent vertex has the same color.  
+3. Define a recursive utility function `graphColourUtil` which tries to assign colors from `1` to `m` to each vertex starting from vertex `v`.  
+4. If all vertices are assigned a color (i.e., `v == V`), return `True` indicating success.  
+5. For the current vertex `v`, try each color `c` from `1` to `m`:  
+6. If assigning color `c` to vertex `v` is safe, assign it (`colour[v] = c`) and make a recursive call to color the next vertex.  
+7. If the recursive call returns `True`, propagate success; otherwise, backtrack by resetting `colour[v] = 0`.  
+8. If no color can be assigned to the current vertex, return `False`.  
+9. Define the function `graphColouring` that initializes a color list with zeros and starts the coloring process by calling `graphColourUtil`.  
+10. If coloring is successful, print the colors assigned to each vertex; otherwise, return `False`.   
 
 ## Program:
 ```
-python Program to implement Subset sum problem.
-Developed by: KAVIYA SHREE  S
+python Program to implement Graph Coloring Problem using backtracking.
+Developed by: KAVIYA SHREE S
 Register Number:  212222110018
 ```
 ```
-def SubsetSum(a,i,sum,target,n):
-    if i==n:
-        return sum==target
-    if sum>target:
-        return False
-    if sum==target:
+class Graph():
+    def __init__(self,vertices):
+        self.V=vertices
+        self.graph=[[0 for column in range(vertices)]for row in range(vertices)]
+    def isSafe(self,v,colour,c):
+        for i in range(self.V):
+            if self.graph[v][i]==1 and colour[i]==c:
+                return False
         return True
-    return SubsetSum(a,i+1,sum,target,n) or SubsetSum(a,i+1,sum+a[i],target,n)
-
-a=[]
-size=int(input())
-for i in range(size):
-    x=int(input())
-    a.append(x)
-
-target=int(input())
-n=len(a)
-if(SubsetSum(a,0,0,target,n)==True):
-    for i in range(size):
-        print(a[i])
-    print("True,subset found")
-else:
-    for i in range(size):
-        print(a[i])
-    print("False,subset not found")
+    def graphColourUtil(self,m,colour,v):
+        if v==self.V:
+            return True
+            
+        for c in range(1,m+1):
+            if self.isSafe(v,colour,c)== True:
+                colour[v]=c
+                if self.graphColourUtil(m,colour,v+1)==True:
+                    return True
+                colour[v]=0
+    def graphColouring(self,m):
+        colour=[0]*self.V
+        if self.graphColourUtil(m,colour,0)==None:
+            return False
+        print("Solution exist and Following are the assigned colours:")
+        for c in colour:
+            print(c,end=' ')
+        return True
 ```
 
 ## Output:
-![image](https://github.com/user-attachments/assets/cb28a906-5fd5-4180-80a1-c9f66238fe97)
+![image](https://github.com/user-attachments/assets/1a0ff028-5e0a-4523-a189-c45230545885)
 
 ## Result:
-The Subset Sum program executed successfully, and the result was determined based on whether a subset matching the target sum was found or not.
+The Graph Coloring program executed successfully, and the colors were assigned to the vertices such that no two adjacent vertices share the same color.
